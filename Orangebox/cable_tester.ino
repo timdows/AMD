@@ -1,22 +1,35 @@
 #include <Adafruit_NeoPixel.h>
+#include <Bounce2.h>
 
 #define LED_PIN 11
 #define INPUT_PIN 2
-int MUX_LEFT[] = {3, 4, 6, 8};
-int MUX_RIGHT[] = {5, 7, 9, 10};
+#define MODE_PIN 13
+
+int MUX_LEFT[] = {7, 9, 10, 5};
+int MUX_RIGHT[] = {4, 3, 8, 6};
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-int buttonState = 0;
+int mode = 0;
+Bounce debouncer = Bounce();
+unsigned long lastModeChange;
+unsigned long lastAction;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Starting ORANGEBOX");
   
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
+
+  debouncer.attach(MODE_PIN);
+  debouncer.interval(20);
   
-  colorWipe(strip.Color(10, 10, 10), 50); // start ?
+  //colorWipe(strip.Color(10, 10, 10), 50); // start ?
+  setModeOnLeds(mode);
+  
+  lastModeChange = millis();
+  lastAction = millis();
   
   pinMode(MUX_LEFT[0], OUTPUT);
   pinMode(MUX_LEFT[1], OUTPUT);
@@ -28,22 +41,31 @@ void setup() {
   pinMode(MUX_RIGHT[3], OUTPUT);
 
   pinMode(INPUT_PIN, INPUT);
-  
-  //delay(1000);
-}
-
-void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, c);
-      strip.show();
-      delay(wait);
-  }
 }
 
 void loop() {
-  //Serial.println("--------------------------------");
+  debouncer.update();
   
-  //Set all leds off
+  if(debouncer.fell()){
+    lastAction = millis();
+    
+    //Only change the mode if the button is pressed within 2 seconds of the last press
+    if(millis() > lastModeChange + 1000){
+      lastModeChange = millis();
+    }
+    else{
+      lastModeChange = millis();
+      if(++mode == 9){
+        mode = 0;
+      }
+    }
+    setModeOnLeds(mode);
+  }
+  
+  if(millis() < lastModeChange + 1000){
+    return;
+  }
+
   setLedsOff();
   
   boolean match[16][16];
@@ -70,16 +92,17 @@ void loop() {
       boolean connected = digitalRead(INPUT_PIN);
       
       if(connected){
-        Serial.print("Got connection on  ");
+        lastAction = millis();
+        /*Serial.print("Got connection on  ");
         Serial.print(countLeft);
         Serial.print(" - ");
-        Serial.println(countRight);
+        Serial.println(countRight);*/
       }
       
-      if(connected && alreadyConnected != -1){
+      /*if(connected && alreadyConnected != -1){
         Serial.print("already connected before on ");
         Serial.println(alreadyConnected);
-      }
+      }*/
 
       match[countLeft][countRight] = connected;
       
@@ -98,6 +121,13 @@ void loop() {
   
   //Show the colors
   strip.show();
+
+  //If for 5 seconds there was no action, display the mode and remember to set the lastModeChange as well
+  if(millis() > lastAction + 5000){
+    lastModeChange = millis();
+    lastAction = millis();
+    setModeOnLeds(mode);
+  }
 }
 
 int checkAlreadyConnected(boolean val[16][16], int count){
@@ -109,66 +139,9 @@ int checkAlreadyConnected(boolean val[16][16], int count){
   return -1;
 }
 
-/*
-void setLedDefinedColor(int ledNumber, int r, int g, int b){
-  strip.setPixelColor(ledNumber, r, g, b);
-}
-
-void setLedColor(int ledNumber, uint32_t color){
-  strip.setPixelColor(ledNumber, color);
-}*/
-
 void setLedsOff(){
   for(int i = 0; i < strip.numPixels(); i++){
     strip.setPixelColor(i, 0, 0, 0);
-  }
-}
-
-void setLedByIntLeft(int count, uint32_t color){
-  switch(count){
-    case 0: strip.setPixelColor(23, color); break;
-    case 1: strip.setPixelColor(22, color); break;
-    case 2: strip.setPixelColor(21, color); break;
-    case 7: strip.setPixelColor(20, color); break;
-    case 6: strip.setPixelColor(19, color); break;
-    case 3: strip.setPixelColor(18, color); break;
-    case 4: strip.setPixelColor(17, color); break;
-    case 5: strip.setPixelColor(16, color); break;
-    case 8: strip.setPixelColor(24, color); break;
-    
-    /*
-    case 9: strip.setPixelColor(15, color); break;
-    case 10: strip.setPixelColor(15, color); break;
-    case 11: strip.setPixelColor(15, color); break;
-    case 12: strip.setPixelColor(15, color); break;
-    case 13: strip.setPixelColor(15, color); break;
-    case 14: strip.setPixelColor(15, color); break;
-    case 15: strip.setPixelColor(15, color); break;
-    */
-  }
-}
-
-void setLedByIntRight(int count, uint32_t color){
-  switch(count){
-    case 0: strip.setPixelColor(15, color); break;
-    case 1: strip.setPixelColor(14, color); break;
-    case 2: strip.setPixelColor(13, color); break;
-    case 7: strip.setPixelColor(12, color); break;
-    case 6: strip.setPixelColor(11, color); break;
-    case 3: strip.setPixelColor(10, color); break;
-    case 4: strip.setPixelColor(9, color); break;
-    case 5: strip.setPixelColor(8, color); break;
-    case 8: strip.setPixelColor(0, color); break;
-    
-    /*
-    case 9: strip.setPixelColor(10, color); break;
-    case 10: strip.setPixelColor(11, color); break;
-    case 11: strip.setPixelColor(12, color); break;
-    case 12: strip.setPixelColor(13, color); break;
-    case 13: strip.setPixelColor(14, color); break;
-    case 14: strip.setPixelColor(15, color); break;
-    case 15: strip.setPixelColor(0, color); break;
-    */
   }
 }
 
@@ -192,3 +165,4 @@ uint32_t getSingleColor(int i){
     case 15: return strip.Color(50, 50, 100);
   }
 }
+
