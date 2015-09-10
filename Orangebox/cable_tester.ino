@@ -10,7 +10,7 @@ int MUX_RIGHT[] = {4, 3, 8, 6};
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(32, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-int mode = 0;
+int mode = 5;
 Bounce debouncer = Bounce();
 unsigned long lastModeChange;
 unsigned long lastAction;
@@ -146,23 +146,45 @@ void setLedsOff(){
 }
 
 uint32_t getSingleColor(int i){
-  switch(i){
-    case 0: return strip.Color(30, 0, 0);
-    case 1: return strip.Color(0, 30, 0);
-    case 2: return strip.Color(0, 0, 30);
-    case 3: return strip.Color(30, 30, 0);
-    case 4: return strip.Color(30, 0, 30);
-    case 5: return strip.Color(50, 0, 25);
-    case 6: return strip.Color(30, 30, 50);
-    case 7: return strip.Color(50, 25, 0);
-    case 8: return strip.Color(30, 0, 50);
-    case 9: return strip.Color(30, 50, 50);
-    case 10: return strip.Color(50, 100, 0);
-    case 11: return strip.Color(0, 100, 50);
-    case 12: return strip.Color(50, 100, 50);
-    case 13: return strip.Color(50, 0, 100);
-    case 14: return strip.Color(0, 50, 100);
-    case 15: return strip.Color(50, 50, 100);
+  switch(mode){
+    case 0: //DB15
+    case 1:
+    case 2:
+      switch(i){
+        case 0: return strip.Color(30, 0, 0);
+        case 1: return strip.Color(0, 30, 0);
+        case 2: return strip.Color(0, 0, 30);
+        case 3: return strip.Color(30, 30, 0);
+        case 4: return strip.Color(30, 0, 30);
+        case 5: return strip.Color(50, 0, 25);
+        case 6: return strip.Color(30, 30, 50);
+        case 7: return strip.Color(50, 25, 0);
+        case 8: return strip.Color(30, 0, 50);
+        case 9: return strip.Color(30, 50, 50);
+        case 10: return strip.Color(50, 100, 0);
+        case 11: return strip.Color(0, 100, 50);
+        case 12: return strip.Color(50, 100, 50);
+        case 13: return strip.Color(50, 0, 100);
+        case 14: return strip.Color(0, 50, 100);
+        case 15: return strip.Color(50, 50, 100);
+      }
+    case 3: //DB9 and RJ45
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+      switch(i){
+        case 10: return strip.Color(30, 0, 0);
+        case 8: return strip.Color(0, 30, 0);
+        case 9: return strip.Color(0, 0, 30);
+        case 6: return strip.Color(30, 30, 0);
+        case 7: return strip.Color(40, 0, 30);
+        case 12: return strip.Color(50, 0, 25);
+        case 13: return strip.Color(30, 30, 50);
+        case 0: return strip.Color(70, 25, 0);
+        case 1: return strip.Color(30, 0, 50);
+      }
   }
 }
 
