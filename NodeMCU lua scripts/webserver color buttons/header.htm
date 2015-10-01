@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>Patrick is gek!</title>
+<style>
+body{font-family: sans-serif;font-weight: normal;margin: 10px;color: #555;background-color: #eee;}
+button{color: #000;border-radius: 4px;cursor: pointer;padding: 6px 12px;text-align: center;width:70px;}
+</style>
+<script language="javascript">
+function loadXMLDoc(state, type){
+var xmlhttp;
+  if (window.XMLHttpRequest){
+    xmlhttp=new XMLHttpRequest();
+  }else{
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  if (type == 1){
+    xmlhttp.open("GET","state=" + state, true);
+  }
+  if(type == 2){
+    xmlhttp.open("GET","led=" + state, true);
+  }
+  xmlhttp.send();
+}
+function createButton(id, name, colorValue){
+  var theDiv = document.getElementById("theDiv");
+  var btn = document.createElement("BUTTON");
+  btn.setAttribute("style", "background-color:#" + colorValue + ";");
+  btn.setAttribute("onclick", "loadXMLDoc('" + colorValue + "', 2)");
+  var t = document.createTextNode(name);
+  btn.appendChild(t);theDiv.appendChild(btn);
+}
+function createBr(){
+  var theDiv = document.getElementById("theDiv");
+  var btn = document.createElement("BR");theDiv.appendChild(btn);
+}
+function onLoad(){
+  var r = 0;var g = 0;var b = 0;
+  for(r = 0; r < 16; r+=3){
+    for(g = 0; g < 16; g+=3){
+      for(b = 0; b < 16; b+=3){
+        var color = r.toString(16) + g.toString(16) + b.toString(16);
+        createButton(r+g+b, color, color);
+      }
+      createBr();
+    }
+  }
+}
+</script>
+</head>
+<body onload="onLoad();">
+<h1>Patrick is gek!</h1>
+<div>
+  <button type="button" style="width:100px" onclick="loadXMLDoc(4, 1)" >Rainbow</button>
+  <button type="button" style="width:100px" onclick="loadXMLDoc(3, 1)" >Disco</button>
+  <button type="button" style="width:100px" onclick="loadXMLDoc(2, 1)" >Mic</button>
+  <button type="button" style="width:100px" onclick="loadXMLDoc(1, 1)" >Full</button>
+  <button type="button" style="width:100px" onclick="loadXMLDoc(0, 1)" >Off</button><br />
+  <button type="button" style="width:100px" onclick="loadXMLDoc(5, 1)" >NightRider</button>
+  <button type="button" style="width:100px" onclick="loadXMLDoc(6, 1)" >ColorWipe</button>
+</div>
+<br /><br />
+<div id="theDiv">
+</div>
+</body>
+</html>
