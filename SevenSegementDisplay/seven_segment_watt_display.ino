@@ -2,9 +2,10 @@
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
 #include "LedControl.h"
+#include "Character.h"
 
 SoftwareSerial ESPserial(2, 3); // RX, TX
-LedControl lc=LedControl(7,9,8,1); //DataIn, CLK, LOAD
+LedControl lc=LedControl(7, 9, 8, 2); //DataIn, CLK, LOAD
 
 byte fontArray[] = {
   // dp-a-b-c-d-e-f-g
@@ -31,8 +32,8 @@ const int slaveSelectPin = 10;
 
 const int espCHPD = 4;
 String incomming = "";
-String request = "38TTT";
-unsigned long timeout = 2500;
+String request = "getData()";
+unsigned long timeout = 5000;
 bool capturing = false;
 
 unsigned long previousMain = 0;
@@ -57,16 +58,19 @@ void setup() {
   SPI.begin();
   digitalWrite(slaveSelectPin,LOW); // take the SS pin low to select the chip:
 
-  //char emptyArray[4] = {'b'};
   char emptyArray[4] = {'1', '2', '3', '4'};
   writeSevenSegment(emptyArray);
 
   //The MAX72XX is in power-saving mode on startup, we have to do a wakeup call
   lc.shutdown(0,false);
+  lc.shutdown(1,false);
   //Set the brightness to a medium values
   lc.setIntensity(0,8);
+  lc.setIntensity(1,8);
   //and clear the display
   lc.clearDisplay(0);
+  lc.clearDisplay(1);
+  testBelowSegments();
 }
 
 void loop(){
@@ -74,23 +78,13 @@ void loop(){
     previousMain = millis();
     makeRequest();
   }
-  scrollDigits();
 }
 
-void scrollDigits() {
-  for(int i=0;i<13;i++) {
-    lc.setDigit(0,7,i,false);
-    lc.setDigit(0,6,i+1,false);
-    lc.setDigit(0,5,i+2,false);
-    lc.setDigit(0,4,i+3,false);
-    lc.setDigit(0,3,i+4,false);
-    lc.setDigit(0,2,i+5,false);
-    lc.setDigit(0,1,i+6,false);
-    lc.setDigit(0,0,i+7,false);
-    delay(250);
-  }
-  //lc.clearDisplay(0);
-  delay(250);
+void testBelowSegments(){
+  lc.setDigit(0, 0, 5, false);
+  lc.setDigit(0, 1, 6, true);
+  lc.setDigit(1, 2, 7, false);
+  lc.setDigit(1, 3, 8, true);
 }
 
 void makeRequest(){
@@ -102,17 +96,12 @@ void makeRequest(){
   unsigned long started = millis();
   ESPserial.println(request);
 
-  int countOpeningBrackets = 0;
   bool canRun = true;
 
   while(millis() - started < timeout && canRun){
     while(ESPserial.available() > 0 && canRun){
       char c = ESPserial.read();
       if(c == '{'){
-        countOpeningBrackets++;
-      }
-
-      if(countOpeningBrackets == 3){
         capturing = true;
       }
 
@@ -150,8 +139,10 @@ void makeRequest(){
   }
   else{
     timesFailed = 0;
-    const char* usage = root["value"];
-    char usageArray[4] = {'b'};
+
+    //Get the watt usage and display on big seven segment displays
+    const char* usage = root["watt"]; //Get the watt variable from json object
+    char usageArray[4] = {'b'}; //Fill with empty data (b = 11 = empty according to fontArray)
     int usageLength = strlen(usage);
 
     //Serial.print("Usage usageLength ");
@@ -160,19 +151,125 @@ void makeRequest(){
     for(int i = 0; i < usageLength; i++){
       int place = 4 - usageLength + i;
       
-      //Serial.print("Char at position ");
-      //Serial.print(place);
-      //Serial.print(" has value ");
+      Serial.print("Char at position ");
+      Serial.print(place);
+      Serial.print(" has value ");
       char c = usage[i];
-      //Serial.println(c);
+      Serial.println(c);
       usageArray[place] = c;
     }
-
     writeSevenSegment(usageArray);
+
+    //Get the totals and display on small seven segment displays
+    const char* lastWeekTotalUsage = root["lastWeekTotal"]; //Get the variable from json object
+    Character lastWeekTotalChars[4];
+    int lastWeekTotalUsageLength = strlen(lastWeekTotalUsage);
+
+    int dots = 0;
+    for(int i = 0; i < lastWeekTotalUsageLength; i++){    
+      char c = lastWeekTotalUsage[i];
+      int n = charToInt(c);
+
+      //If it is a dot
+      if(n == 100){
+        dots++;
+        lastWeekTotalChars[i - dots].setDot();
+      }
+      else{
+        lastWeekTotalChars[i - dots].setNumber(charToInt(c));
+      }
+    }
+    writeSmallSevenSegment(0, 0, lastWeekTotalChars);    
+
+    //Get the totals and display on small seven segment displays
+    const char* thisWeekTotalUsage = root["thisWeekTotal"]; //Get the variable from json object
+    Character thisWeekTotalChars[4];
+    int thisWeekTotalUsageLength = strlen(thisWeekTotalUsage);
+
+    dots = 0;
+    for(int i = 0; i < thisWeekTotalUsageLength; i++){    
+      char c = thisWeekTotalUsage[i];
+      int n = charToInt(c);
+
+      //If it is a dot
+      if(n == 100){
+        dots++;
+        thisWeekTotalChars[i - dots].setDot();
+      }
+      else{
+        thisWeekTotalChars[i - dots].setNumber(charToInt(c));
+      }
+    }
+    writeSmallSevenSegment(0, 1, thisWeekTotalChars);   
+
+    //Get the totals and display on small seven segment displays
+    const char* lastMonthTotalUsage = root["lastMonthTotal"]; //Get the variable from json object
+    Character lastMonthTotalChars[4];
+    int lastMonthTotalUsageLength = strlen(lastMonthTotalUsage);
+
+    dots = 0;
+    for(int i = 0; i < lastMonthTotalUsageLength; i++){    
+      char c = lastMonthTotalUsage[i];
+      int n = charToInt(c);
+
+      //If it is a dot
+      if(n == 100){
+        dots++;
+        lastMonthTotalChars[i - dots].setDot();
+      }
+      else{
+        lastMonthTotalChars[i - dots].setNumber(charToInt(c));
+      }
+
+      //Canot display more than 4 characters on the screen
+      if(i - dots > 3){
+        break;
+      }
+    }
+    writeSmallSevenSegment(1, 0, lastMonthTotalChars);   
+
+    //Get the totals and display on small seven segment displays
+    const char* thisMonthTotalUsage = root["thisMonthTotal"]; //Get the variable from json object
+    Character thisMonthTotalChars[4];
+    int thisMonthTotalUsageLength = strlen(thisMonthTotalUsage);
+
+    dots = 0;
+    for(int i = 0; i < thisMonthTotalUsageLength; i++){    
+      char c = thisMonthTotalUsage[i];
+      int n = charToInt(c);
+
+      //If it is a dot
+      if(n == 100){
+        dots++;
+        thisMonthTotalChars[i - dots].setDot();
+      }
+      else{
+        thisMonthTotalChars[i - dots].setNumber(charToInt(c));
+      }
+
+      //Canot display more than 4 characters on the screen
+      if(i - dots > 3){
+        break;
+      }
+    }
+    writeSmallSevenSegment(1, 1, thisMonthTotalChars);   
   }
-  
 }
 
+//TODO changek argument chars to pointer
+void writeSmallSevenSegment(int address, int display, Character chars[]){
+  int displayAdd = 0;
+  if(display == 1){
+    displayAdd = 4;
+  }
+  
+  lc.setDigit(address, 3 + displayAdd, chars[0].number, chars[0].dot);
+  lc.setDigit(address, 2 + displayAdd, chars[1].number, chars[1].dot);
+  lc.setDigit(address, 1 + displayAdd, chars[2].number, chars[2].dot);
+  lc.setDigit(address, 0 + displayAdd, chars[3].number, chars[3].dot);
+}
+
+//TODO change argument array to pointer
 void writeSevenSegment(char array[]){
   digitalWrite (slaveSelectPin, LOW); // << RCLK line goes low
   SPI.transfer (fontArray[charToInt(array[0])]);  //  << SRCLK goes  high-low 8 times to output 8 bits of data
@@ -217,6 +314,10 @@ int charToInt(char c){
       return 10;
     case 'b':
       return 11;
+    case '.':
+    case ',':
+      return 100;
+      
   }
 }
 
