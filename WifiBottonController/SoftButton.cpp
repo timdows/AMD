@@ -1,8 +1,9 @@
 #include "SoftButton.h"
 
 //Constructor
-SoftButton::SoftButton(int pin, int ledstripNumber, Adafruit_NeoPixel *ledstrip, int veraIdRed, int veraIdGreen, int veraIdBlue){
-  this->pin = pin;
+SoftButton::SoftButton(int row, int column, int ledstripNumber, Adafruit_NeoPixel *ledstrip, int veraIdRed, int veraIdGreen, int veraIdBlue){
+  this->row = row;
+  this->column = column;
   this->ledstripNumber = ledstripNumber;
   this->ledstrip = ledstrip;
 
@@ -19,8 +20,8 @@ SoftButton::SoftButton(int pin, int ledstripNumber, Adafruit_NeoPixel *ledstrip,
   this->flashLedStatus = false;
 }
 
-int SoftButton::GetPin(){
-  return this->pin;
+int SoftButton::GetRow(){
+  return this->row;
 }
 
 void SoftButton::SetColor(int red, int green, int blue){

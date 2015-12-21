@@ -14,7 +14,7 @@ L293D::L293D(int pin1, int pin2){
   this->previousMillis = millis();
 
   this->running = false;
-  this->runningSpeed = 200;
+  this->runningSpeed = 255; //Between 0 and 255
   this->runningMilliseconds = 0;
   this->runningDirection = 0;
 }

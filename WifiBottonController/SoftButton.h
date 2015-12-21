@@ -6,7 +6,8 @@
 
 class SoftButton{
 private:
-  int pin;
+  int row;
+  int column;
   int ledstripNumber;
 
   unsigned long previousMillis;
@@ -33,10 +34,10 @@ private:
   void SetStripWhite();
   void SendCommandToVera(int id, int level);
 public:
-  SoftButton(int pin, int ledstripNumber, Adafruit_NeoPixel *ledstrip, int veraIdRed, int veraIdGreen, int veraIdBlue);
+  SoftButton(int row, int column, int ledstripNumber, Adafruit_NeoPixel *ledstrip, int veraIdRed, int veraIdGreen, int veraIdBlue);
   void Update();
   void FlashButton();
-  int GetPin();
+  int GetRow();
   void SetColor(int red, int green, int blue);
   int GetRed();
   int GetGreen();
