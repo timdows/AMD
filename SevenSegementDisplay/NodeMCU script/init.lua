@@ -1,7 +1,7 @@
 commands = {}
-commands.get1 = "GET http://10.0.0.14/housedb/web/app_dev.php/vera/7segment"
+commands.get1 = "GET /api/vera/sevensegment"
 commands.get2 = " HTTP/1.1\r\n"
-commands.host = "Host: 10.0.0.14\r\n"
+commands.host = "Host: 10.0.0.5\r\n"
 commands.connection = "Connection: keep-alive\r\n"
 commands.accept = "Accept: */*\r\n\r\n"
 
@@ -26,7 +26,7 @@ function getData()
         print(payload)
         print("\r\n")
     end )
-    conn:connect(80,"10.0.0.14")
+    conn:connect(80,"10.0.0.5")
     command = commands.get1 .. commands.get2 .. commands.host .. commands.connection .. commands.accept
     --print(command)
     conn:send(command)
