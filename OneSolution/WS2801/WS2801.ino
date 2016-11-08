@@ -1,8 +1,9 @@
 
 
+#include "ACS712.h"
 #define MY_DEBUG
 #define MY_RADIO_NRF24
-#define MY_REPEATER_FEATURE
+//#define MY_REPEATER_FEATURE
 
 //#define HEARTBEAT_TIME 60000UL  // 1 minute
 
@@ -20,7 +21,7 @@
 
 //MySensor gw;
 WS28xx ledStrip(CHILD_RED, CHILD_GREEN, CHILD_BLUE, CHILD_ALL);
-//ACS712 acs712(&gw);
+ACS712 acs712(CHILD_ALL, A3);
 //Relay relay1(&gw, 3, CHILD_RELAY1);
 //Relay relay2(&gw, 4, CHILD_RELAY2);
 
@@ -50,7 +51,7 @@ void presentation()
 	}
 
 	// Send the sketch version information to the gateway and Controller
-	sendSketchInfo("WS28xx Plafond", "2");
+	sendSketchInfo("WS28xx entree", "2");
 }
 
 void loop() {
@@ -66,6 +67,7 @@ void loop() {
 	//}
 
 	ledStrip.Update();
+	acs712.CheckPowerUsage();
 }
 
 void receive(const MyMessage &message) {
@@ -75,9 +77,6 @@ void receive(const MyMessage &message) {
 
 	// We only expect one type of message from controller. But we better check anyway.
 	if (message.type == V_LIGHT || message.type == V_DIMMER) {
-		//Always force an update of the watts used
-		//acs712.ForceUpdate();
-
 		//Update RGB values
 		if (message.sensor < NUMBER_OF_SCENES) {
 			ledStrip.SetRGBValue(message);

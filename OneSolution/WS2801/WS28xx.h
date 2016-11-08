@@ -7,8 +7,9 @@
 #define MY_RADIO_NRF24
 
 #define NUMBER_OF_SCENES 4
-#define NUM_LEDS 209 //plafond
+//#define NUM_LEDS 209 //plafond
 //#define NUM_LEDS 35 //keukenkastje rechts
+#define NUM_LEDS 62 //entree
 
 #include "arduino.h"
 #include "MySensorsCore.h"
