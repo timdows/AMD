@@ -20,6 +20,7 @@ protected:
 public:
 	void Init(int childId, int pin);
 	void SetOff();
+	void SetOn();
 	void ProcessMessage(const MyMessage &message);
 };
 

@@ -10,7 +10,14 @@ void FanController::Init(int childId, int pin)
 
 void FanController::SetOff()
 {
+	digitalWrite(this->pin, LOW);
 	send(MyMessage(this->childId, V_LIGHT).set(0));
+}
+
+void FanController::SetOn()
+{
+	digitalWrite(this->pin, HIGH);
+	send(MyMessage(this->childId, V_LIGHT).set(1));
 }
 
 void FanController::ProcessMessage(const MyMessage &message)

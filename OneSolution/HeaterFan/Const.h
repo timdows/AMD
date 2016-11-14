@@ -4,8 +4,8 @@
 
 #define CHILD_ID_HUM_1 1
 #define CHILD_ID_TEMP_1 2
-#define CHILD_ID_HUM_2 3
-#define CHILD_ID_TEMP_2 4
+//#define CHILD_ID_HUM_2 3
+//#define CHILD_ID_TEMP_2 4
 
 #define CHILD_ID_FAN_1A 5
 #define CHILD_ID_FAN_1B 6
@@ -19,7 +19,8 @@
 
 #define HAL_PIN A1
 #define DHT_PIN_1 A2
-#define DHT_PIN_2 0
+//#define DHT_PIN_2 0
+#define BUTTON_PIN A3
 
 #define FAN_PIN_1A 2
 #define FAN_PIN_1B 3

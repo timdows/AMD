@@ -1,3 +1,4 @@
+
 #define MY_DEBUG
 #define MY_RADIO_NRF24
 
@@ -7,9 +8,11 @@
 #include <SPI.h>
 #include <MySensors.h>
 #include "Const.h"
+#include "Bounce.h"
 
+Bounce button;
 DHTClass dht1;
-DHTClass dht2;
+//DHTClass dht2;
 FanController fan1A;
 FanController fan1B;
 FanController fan1C;
@@ -25,6 +28,7 @@ bool finishedStartup;
 void setup() {
 	finishedStartup = false;
 
+	button.Init(BUTTON_PIN);
 	dht1.Init(CHILD_ID_TEMP_1, CHILD_ID_HUM_1, DHT_PIN_1);
 	//dht2.Init(CHILD_ID_TEMP, CHILD_ID_HUM, DHT_PIN);
 
@@ -47,8 +51,8 @@ void presentation()
 	present(CHILD_ID_HUM_1, S_HUM);
 	present(CHILD_ID_TEMP_1, S_TEMP);
 
-	present(CHILD_ID_HUM_2, S_HUM);
-	present(CHILD_ID_TEMP_2, S_TEMP);
+	//present(CHILD_ID_HUM_2, S_HUM);
+	//present(CHILD_ID_TEMP_2, S_TEMP);
 
 	present(CHILD_ID_FAN_1A, S_LIGHT);
 	present(CHILD_ID_FAN_1B, S_LIGHT);
@@ -81,6 +85,35 @@ void loop() {
 	}
 
 	dht1.Update();
+
+	// returns true if button has changed
+	if (button.Update()) {
+		Serial.println("Button changed");
+		if (button.Status()) {
+			Serial.println("Button ON");
+			fan1A.SetOn();
+			fan1B.SetOn();
+			fan1C.SetOn();
+			fan1D.SetOn();
+
+			fan2A.SetOn();
+			fan2B.SetOn();
+			fan2C.SetOn();
+			fan2D.SetOn();
+		}
+		else {
+			Serial.println("Button OFF");
+			fan1A.SetOff();
+			fan1B.SetOff();
+			fan1C.SetOff();
+			fan1D.SetOff();
+
+			fan2A.SetOff();
+			fan2B.SetOff();
+			fan2C.SetOff();
+			fan2D.SetOff();
+		}
+	}
 }
 
 void receive(const MyMessage &message) {
