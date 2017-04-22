@@ -1,0 +1,1 @@
+C:/Users/Timdows/Documents/Arduino/libraries/MySensors/core/MySensorsCore.h

@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false
+            }
+        }
+    ]
+}

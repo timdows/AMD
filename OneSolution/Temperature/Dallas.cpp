@@ -1,0 +1,1 @@
+C:/Dev/arduino_mysensors/OneSolution/_shared/Dallas.cpp
