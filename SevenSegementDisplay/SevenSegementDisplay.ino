@@ -81,14 +81,14 @@ void loop(){
 }
 
 void testBelowSegments(){
-  lc.setDigit(0, 0, 5, false);
-  lc.setDigit(0, 1, 6, true);
-  lc.setDigit(1, 2, 7, false);
-  lc.setDigit(1, 3, 8, true);
+  lc.setDigit(0, 3, 5, true);
+  lc.setDigit(0, 2, 6, false);
+  lc.setDigit(1, 2, 8, false);
+  lc.setDigit(1, 3, 7, true);
 }
 
 void makeRequest(){
-  flushESPserial();
+  //flushESPserial();
 
   incomming = "";
   capturing = false;
@@ -161,7 +161,7 @@ void makeRequest(){
     writeSevenSegment(usageArray);
 
     //Get the totals and display on small seven segment displays
-    const char* lastWeekTotalUsage = root["lastWeekTotal"]; //Get the variable from json object
+    const char* lastWeekTotalUsage = root["thisWeek"]; //Get the variable from json object
     Character lastWeekTotalChars[4];
     int lastWeekTotalUsageLength = strlen(lastWeekTotalUsage);
 
@@ -182,7 +182,7 @@ void makeRequest(){
     writeSmallSevenSegment(0, 0, lastWeekTotalChars);    
 
     //Get the totals and display on small seven segment displays
-    const char* thisWeekTotalUsage = root["thisWeekTotal"]; //Get the variable from json object
+    const char* thisWeekTotalUsage = root["today"]; //Get the variable from json object
     Character thisWeekTotalChars[4];
     int thisWeekTotalUsageLength = strlen(thisWeekTotalUsage);
 
@@ -203,7 +203,7 @@ void makeRequest(){
     writeSmallSevenSegment(0, 1, thisWeekTotalChars);   
 
     //Get the totals and display on small seven segment displays
-    const char* lastMonthTotalUsage = root["lastMonthTotal"]; //Get the variable from json object
+    const char* lastMonthTotalUsage = root["lastMonth"]; //Get the variable from json object
     Character lastMonthTotalChars[4];
     int lastMonthTotalUsageLength = strlen(lastMonthTotalUsage);
 
@@ -229,7 +229,7 @@ void makeRequest(){
     writeSmallSevenSegment(1, 0, lastMonthTotalChars);   
 
     //Get the totals and display on small seven segment displays
-    const char* thisMonthTotalUsage = root["thisMonthTotal"]; //Get the variable from json object
+    const char* thisMonthTotalUsage = root["thisMonth"]; //Get the variable from json object
     Character thisMonthTotalChars[4];
     int thisMonthTotalUsageLength = strlen(thisMonthTotalUsage);
 
