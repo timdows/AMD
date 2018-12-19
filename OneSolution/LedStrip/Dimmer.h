@@ -10,7 +10,7 @@
 #endif
 
 #include "Bounce.h"
-#include "MySensorsCore.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 
 class Dimmer {
 private:
@@ -35,4 +35,3 @@ public:
 
 
 #endif
-

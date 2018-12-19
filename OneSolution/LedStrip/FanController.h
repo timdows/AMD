@@ -9,7 +9,7 @@
 #include "WProgram.h"
 #endif
 
-#include "MySensorsCore.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 
 class FanController
 {
@@ -25,4 +25,3 @@ public:
 };
 
 #endif
-

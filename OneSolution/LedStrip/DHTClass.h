@@ -10,7 +10,7 @@
 #endif
 
 #include "DHT.h"
-#include "MySensorsCore.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 
 class DHTClass
 {
@@ -32,4 +32,3 @@ public:
 };
 
 #endif
-

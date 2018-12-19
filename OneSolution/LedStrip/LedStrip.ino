@@ -60,11 +60,33 @@ void loop() {
 	ledBlue.Update();
 
 	if (buttonLeft.update()) {
-		send(MyMessage(CHILD_ID_BUTTON_LEFT, V_TRIPPED).set(buttonLeft.read() ? 1 : 0));
+    int status = buttonLeft.read() ? 1 : 0;
+    if (status == 1) {
+      ledBlue.SetDesiredLedLevel(10);
+      ledRed.SetDesiredLedLevel(100);
+      ledGreen.SetDesiredLedLevel(10);
+    }
+    if (status == 0) {
+      ledBlue.SetDesiredLedLevel(0);
+      ledRed.SetDesiredLedLevel(0);
+      ledGreen.SetDesiredLedLevel(0);
+    }
+		send(MyMessage(CHILD_ID_BUTTON_LEFT, V_TRIPPED).set(status));
 	}
 
 	if (buttonRight.update()) {
-		send(MyMessage(CHILD_ID_BUTTON_RIGHT, V_TRIPPED).set(buttonRight.read() ? 1 : 0));
+    int status = buttonRight.read() ? 1 : 0;
+    if (status == 1) {
+      ledBlue.SetDesiredLedLevel(100);
+      ledRed.SetDesiredLedLevel(100);
+      ledGreen.SetDesiredLedLevel(0);
+    }
+    if (status == 0) {
+      ledBlue.SetDesiredLedLevel(0);
+      ledRed.SetDesiredLedLevel(0);
+      ledGreen.SetDesiredLedLevel(0);
+    }
+		send(MyMessage(CHILD_ID_BUTTON_RIGHT, V_TRIPPED).set(status));
 	}
 }
 
