@@ -11,9 +11,8 @@
 #define CHILD_ID_BLUE 3
 #define PIN_BLUE 3
 
-#define CHILD_ID_BUTTON_LEFT 4
-#define PIN_LEFT 7
+//#define CHILD_ID_BUTTON_LEFT 4
+//#define PIN_LEFT 7
 
-#define CHILD_ID_BUTTON_RIGHT 5
-#define PIN_RIGHT 8
-
+//#define CHILD_ID_BUTTON_RIGHT 5
+//#define PIN_RIGHT 8

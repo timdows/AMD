@@ -13,8 +13,8 @@ LedstripColor ledRed;
 LedstripColor ledGreen;
 LedstripColor ledBlue;
 
-Bounce buttonLeft;
-Bounce buttonRight;
+//Bounce buttonLeft;
+//Bounce buttonRight;
 
 bool finishedStartup;
 
@@ -26,8 +26,8 @@ void setup() {
 	ledGreen.Init(PIN_GREEN, CHILD_ID_GREEN, 25);
 	ledBlue.Init(PIN_BLUE, CHILD_ID_BLUE, 25);
 
-	buttonLeft.attach(PIN_LEFT, INPUT_PULLUP);
-	buttonRight.attach(PIN_RIGHT, INPUT_PULLUP);
+	//buttonLeft.attach(PIN_LEFT, INPUT_PULLUP);
+	//buttonRight.attach(PIN_RIGHT, INPUT_PULLUP);
 }
 
 void presentation()
@@ -38,11 +38,12 @@ void presentation()
 	present(CHILD_ID_GREEN, S_DIMMER);
 	present(CHILD_ID_BLUE, S_DIMMER);
 
-	present(CHILD_ID_BUTTON_LEFT, S_DOOR);
-	present(CHILD_ID_BUTTON_RIGHT, S_DOOR);
+	//present(CHILD_ID_BUTTON_LEFT, S_DOOR);
+	//present(CHILD_ID_BUTTON_RIGHT, S_DOOR);
 
 	// Send the sketch version information to the gateway and Controller
-	sendSketchInfo("Bedroom LedStrip", "2.0");
+	//sendSketchInfo("Bedroom LedStrip", "2.0");
+  sendSketchInfo("Living colors", "0.3");
 }
 
 void loop() {
@@ -50,16 +51,16 @@ void loop() {
 	{
 		finishedStartup = true;
 
-		ledRed.SetDesiredLedLevel(100);
-		ledGreen.SetDesiredLedLevel(100);
-		ledBlue.SetDesiredLedLevel(100);
+		ledRed.SetDesiredLedLevel(0);
+		ledGreen.SetDesiredLedLevel(0);
+		ledBlue.SetDesiredLedLevel(0);
 	}
 
 	ledRed.Update();
 	ledGreen.Update();
 	ledBlue.Update();
 
-	if (buttonLeft.update()) {
+	/*if (buttonLeft.update()) {
     int status = buttonLeft.read() ? 1 : 0;
     if (status == 1) {
       ledBlue.SetDesiredLedLevel(10);
@@ -87,7 +88,7 @@ void loop() {
       ledGreen.SetDesiredLedLevel(0);
     }
 		send(MyMessage(CHILD_ID_BUTTON_RIGHT, V_TRIPPED).set(status));
-	}
+	}*/
 }
 
 void receive(const MyMessage &message) {
