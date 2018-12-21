@@ -20,18 +20,18 @@ bool Bounce::Update()
 		// Oopsie with NO vs NC
 		int sensorVal = !digitalRead(this->pin);
 		if (sensorVal == this->readStatus && sensorVal){
-			Serial.print("In readstatus ");
+			/*Serial.print("In readstatus ");
 			Serial.print(this->pin);
 			Serial.print(" - ");
       Serial.print(this->currentRead);
       Serial.print(" - ");
       Serial.print(this->readsToChange);
       Serial.print(" - ");
-			Serial.println(sensorVal);
+			Serial.println(sensorVal);*/
 
 			if (++this->currentRead == this->readsToChange) {
 				this->publicStatus = sensorVal;
-				Serial.println("In readstatus bounce true");
+				//Serial.println("In readstatus bounce true");
 				return true;
 			}
 		}
