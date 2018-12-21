@@ -2,7 +2,7 @@
 #define H_L293D
 
 #include "Arduino.h"
-#include "MySensorsCore.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 
 class L293D {
 private:
@@ -35,4 +35,3 @@ public:
 };
 
 #endif
-

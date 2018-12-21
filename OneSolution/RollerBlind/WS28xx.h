@@ -11,7 +11,7 @@
 //#define NUM_LEDS 35 //keukenkastje rechts
 
 #include "arduino.h"
-#include "MySensorsCore.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 #include "Adafruit_NeoPixel.h"
 #include "SceneStatus.h"
 
@@ -71,4 +71,3 @@ public:
 };
 
 #endif
-

@@ -36,7 +36,7 @@ void presentation()
 	present(CHILD_ID_DOWN, S_LIGHT);
 
 	// Send the sketch version information to the gateway and Controller
-	sendSketchInfo("Bedroom rollerblinds", "2.0");
+	sendSketchInfo("Bedroom rollerblinds", "2.1");
 }
 
 void loop() {
@@ -123,4 +123,3 @@ void receive(const MyMessage &message) {
 		break;
 	}
 }
-

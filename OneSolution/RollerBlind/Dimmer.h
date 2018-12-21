@@ -10,7 +10,7 @@
 #endif
 
 #include "Bounce.h"
-#include "MySensorsCore.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 
 class Dimmer {
 private:
@@ -24,7 +24,7 @@ private:
 	bool shouldChange = false;
 	unsigned long previousMillis;
 	unsigned long dimmerDelay = 10;
-	bool goOnOff = false; // True is on, false is off
+	bool goOnOff = true; // True is on, false is off
 	int currentBrightness = 0;
 
 public:
@@ -35,4 +35,3 @@ public:
 
 
 #endif
-

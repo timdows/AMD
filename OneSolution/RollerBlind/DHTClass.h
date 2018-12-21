@@ -9,8 +9,8 @@
 #include "WProgram.h"
 #endif
 
-#include <DHT.h>
-#include "MySensorsCore.h"
+#include "DHT.h"
+#include "C:\Users\Timdows\Documents\Arduino\libraries\MySensors\core\MySensorsCore.h"
 
 class DHTClass
 {
@@ -32,4 +32,3 @@ public:
 };
 
 #endif
-

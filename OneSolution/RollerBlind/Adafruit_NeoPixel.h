@@ -1,4 +1,4 @@
-*--------------------------------------------------------------------
+/*--------------------------------------------------------------------
 This file is part of the Adafruit NeoPixel library.
 
 NeoPixel is free software: you can redistribute it and/or modify
@@ -95,4 +95,3 @@ private:
 };
 
 #endif // ADAFRUIT_NEOPIXEL_H
-

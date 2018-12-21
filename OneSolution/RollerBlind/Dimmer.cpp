@@ -16,7 +16,6 @@ void Dimmer::Init(int ledPin, int childId, int buttonPin, int buttonLedPin)
 	pinMode(this->buttonLedPin, OUTPUT);
 
 	send(MyMessage(this->childId, V_LIGHT).set(0));
-	send(MyMessage(this->childId, V_DIMMER).set(0));
 }
 
 void Dimmer::Update()
@@ -30,7 +29,6 @@ void Dimmer::Update()
 		this->goOnOff = !this->goOnOff;
 		/*Serial.print("New state");
 		Serial.println(this->goOnOff);*/
-		send(MyMessage(this->childId, V_DIMMER).set(this->goOnOff ? 100 : 0));
 	}
 
 	unsigned long currentMillis = millis();
