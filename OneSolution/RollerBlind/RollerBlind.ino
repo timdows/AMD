@@ -34,6 +34,7 @@ void presentation()
 	present(CHILD_ID_LIGHT, S_DIMMER);
 	present(CHILD_ID_UP, S_LIGHT);
 	present(CHILD_ID_DOWN, S_LIGHT);
+  present(CHILD_ID_WAKEUPLIGHT, S_LIGHT);
 
 	// Send the sketch version information to the gateway and Controller
 	sendSketchInfo("Bedroom rollerblinds", "2.1");
@@ -114,12 +115,17 @@ void receive(const MyMessage &message) {
 		}
 		break;
 	case CHILD_ID_LIGHT:
-		if (atoi(message.data)) {
-			dimmer.SetStatus(true);
-		}
-		else {
-			dimmer.SetStatus(false);
-		}
-		break;
-	}
+    if (atoi(message.data)) {
+      dimmer.SetStatus(true);
+    }
+    else {
+      dimmer.SetStatus(false);
+    }
+    break;
+  case CHILD_ID_WAKEUPLIGHT:
+    if (atoi(message.data)) {
+      dimmer.StartWakeupLight();
+    }
+    break;
+  }
 }
